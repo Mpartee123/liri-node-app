@@ -1,0 +1,8 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "dotenv": "latest",
+    "node-spotify-api": "latest"
+  }
+}
