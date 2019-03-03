@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "dotenv": "latest",
-    "node-spotify-api": "latest"
+    "node-spotify-api": "latest",
+    "axios": "latest",
+    "moment": "latest",
+    "request": "latest"
   }
 }
