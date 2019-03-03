@@ -5,6 +5,10 @@ exports.spotify = {
   secret: process.env.SPOTIFY_SECRET
 };
 
+exports.concert ={
+  appId: process.env.APP_ID
+};
+
 exports.omdb ={
   apiKey: process.env.OMDB_API_KEY
 };

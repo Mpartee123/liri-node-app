@@ -4,7 +4,9 @@ let term = process.argv.slice(3).join(" ");
 function concert() {
     const axios = require('axios');
     const moment = require('moment');
-    const queryURL = `https://rest.bandsintown.com/artists/${term}/events?app_id=codingbootcamp`;
+    let keys = require("./keys.js");
+    const appId = keys.concert.appId;
+    const queryURL = `https://rest.bandsintown.com/artists/${term}/events?app_id=`+appId;
 
     axios.get(queryURL)
         .then(function (response) {
