@@ -88,9 +88,7 @@ function doTheThing() {
             return console.log(error);
         }
         var dataArr = data.split(" ");
-
-        console.log(dataArr);
-
+        // console.log(dataArr);
         let randomTxtSearch = dataArr[0];
         let randomTxtTerm = dataArr.slice(1).join(" ");
 
