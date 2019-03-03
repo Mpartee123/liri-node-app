@@ -1,22 +1,22 @@
-let search = process.argv[2];
+let searchType = process.argv[2];
 let term = process.argv.slice(3).join(" ");
 
-function concert() {
+function concert(searchTerm) {
     const axios = require('axios');
     const moment = require('moment');
     let keys = require("./keys.js");
     const appId = keys.concert.appId;
-    const queryURL = `https://rest.bandsintown.com/artists/${term}/events?app_id=`+appId;
+    const queryURL = `https://rest.bandsintown.com/artists/${searchTerm}/events?app_id=` + appId;
 
     axios.get(queryURL)
         .then(function (response) {
 
-            for (i=0;i<5;i++){
+            for (i = 0; i < 5; i++) {
                 let venueLocation = "";
-                let callbackInfo=response.data[i];
-                if (callbackInfo.venue.region){
-                            venueLocation = `${callbackInfo.venue.city}, ${callbackInfo.venue.region}`;
-                        } else venueLocation = `${callbackInfo.venue.city}, ${callbackInfo.venue.country}`;
+                let callbackInfo = response.data[i];
+                if (callbackInfo.venue.region) {
+                    venueLocation = `${callbackInfo.venue.city}, ${callbackInfo.venue.region}`;
+                } else venueLocation = `${callbackInfo.venue.city}, ${callbackInfo.venue.country}`;
                 let date = moment(new Date(callbackInfo.datetime)).format('LL');
                 console.log(`
             Artist:${term.toUpperCase()}
@@ -32,14 +32,14 @@ function concert() {
         });
 }
 
-function spotify() {
+function spotify(searchTerm) {
     require("dotenv").config();
     let keys = require("./keys.js");
     let Spotify = require('node-spotify-api');
 
     let spotify = new Spotify(keys.spotify);
 
-    spotify.search({type: 'track', query: term}, function (err, data) {
+    spotify.search({type: 'track', query: searchTerm}, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
@@ -52,14 +52,13 @@ function spotify() {
                         `);
     });
 }
-function movie() {
+
+function movie(searchTerm) {
     require("dotenv").config();
     let keys = require("./keys.js");
     var axios = require("axios");
-    let query = process.argv.slice(3).join("+");
     const apiKey = keys.omdb.apiKey;
-
-    axios.get("http://www.omdbapi.com/?apikey="+apiKey+"&t=" + query)
+    axios.get("http://www.omdbapi.com/?apikey="+apiKey+"&t=" + searchTerm.split(" ").join("+"))
         .then(function (response) {
             let callbackData=response.data;
             console.log(`
@@ -79,16 +78,54 @@ function movie() {
         });
 }
 
-switch (search) {
+function doTheThing() {
+
+    const fs = require('fs');
+
+    fs.readFile("random.txt", "utf8", function (error, data) {
+
+        if (error) {
+            return console.log(error);
+        }
+        var dataArr = data.split(" ");
+
+        console.log(dataArr);
+
+        let randomTxtSearch = dataArr[0];
+        let randomTxtTerm = dataArr.slice(1).join(" ");
+
+        switch (randomTxtSearch) {
+            case 'concert-this':
+                concert(randomTxtTerm);
+                break;
+            case 'spotify-this-song':
+                spotify(randomTxtTerm);
+                break;
+            case 'movie-this':
+                movie(randomTxtTerm);
+                break;
+
+            default:
+                console.log("It would appear that your random.txt file is not formatted properly");
+        }
+
+    });
+
+}
+
+switch (searchType) {
 
     case 'spotify-this-song':
-        spotify();
+        spotify(term);
         break;
     case 'concert-this':
-        concert();
+        concert(term);
         break;
     case'movie-this':
-        movie();
+        movie(term);
+        break;
+    case 'do-what-it-says':
+        doTheThing();
         break;
 
     default:
@@ -100,5 +137,6 @@ switch (search) {
             do-what-it-says (this will run the commands from the random.txt file)
         `);
 }
+
 
 
